@@ -1,0 +1,82 @@
+{
+    "title": "HUB3 Data",
+    "description": "Describes a data set required for generating a HUB3 bar code.",
+    "type": "object",
+    "properties": {
+        "amount": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 10000000000000,
+            "exclusiveMaximum": true
+        },
+        "sender": {
+            "type": "object",
+            "description": "Information regarding the person or company sending the money",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "Name and surname or company name"
+                },
+                "street": {
+                    "type": "string",
+                    "maxLength": 27,
+                    "description": "Street and house number"
+                },
+                "place": {
+                    "type": "string",
+                    "maxLength": 27,
+                    "description": "Post code and place name"
+                }
+            },
+        "receiver": {
+            "type": "object",
+            "description": "Information regarding the person or company receiving the money",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "maxLength": 30,
+                    "description": "Name and surname or company name"
+                },
+                "street": {
+                    "type": "string",
+                    "maxLength": 27,
+                    "description": "Street and house number"
+                },
+                "place": {
+                    "type": "string",
+                    "maxLength": 27,
+                    "description": "Post code and place name"
+                },
+                "iban": {
+                    "type": "string",
+                    "minLength": 21,
+                    "maxLength": 21,
+                    "pattern": "^[A-Z]{2}\\d{19}$",
+                    "description": "Account number in IBAN format"
+                },
+                "model": {
+                    "type": "string",
+                    "maxLength": 2,
+                    "description": "Payment model"
+                },
+                "call_no": {
+                    "type": "string",
+                    "maxLength": 22,
+                    "description": "Call number"
+                }
+            },
+            "purpose": {
+                "type": "string",
+                "maxLength": 4,
+                "description": "Purpose code from ISO 20022 standard"
+            },
+            "description": {
+                "type": "string",
+                "maxLength": 35,
+                "description": "Free form description"
+            },
+        }
+    },
+    "required": ["amount", "sender", "receiver"]
+}

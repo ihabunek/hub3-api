@@ -1,0 +1,138 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+
+<h1>HUB3</h1>
+
+<p>Jednostavan API za generiranje PDF417 2D barkodova po HUB3 standardu.</p>
+
+<p>O HUB3 standardu pročitaj više <a href="http://www.hub.hr/hr/hub3-obrasci"
+target=".blank">ovdje</a>.</p>
+
+
+<h2>Endpoint: <code>GET /hub3</code></h2>
+
+Generira HUB3 bar kod u raznim formatima.
+
+<h4>Parametri</h4>
+
+<table>
+</table>
+
+
+<h4>Podaci za barkod</h4>
+
+<p>Podaci se šalju kodirani u JSON formatu.</p>
+
+<table class="table table-condensed table-zebra table-hover">
+    <tr>
+        <th>Naziv</th>
+        <th>Opis</th>
+        <th>Dužina</th>
+    </tr>
+    <tr>
+        <td>amount</td>
+        <td>Iznos transakcije u HRK</td>
+        <td>15</td>
+    </tr>
+    <tr>
+        <td>sender {</td>
+        <td>Podaci o platitelju</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 30px">name</td>
+        <td>Ime i prezime ili naziv tvrtke</td>
+        <td>30</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 30px">street</td>
+        <td>Adresa (ulica i broj)</td>
+        <td>27</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 30px">place</td>
+        <td>Adresa (poštanski broj i mjesto)</td>
+        <td>27</td>
+    </tr>
+    <tr>
+        <td>}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>receiver {</td>
+        <td>Podaci o primatelju</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td style="padding-left: 30px">name</td>
+        <td>Ime i prezime ili naziv tvrtke</td>
+        <td>30</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 30px">street</td>
+        <td>Adresa (ulica i broj)</td>
+        <td>27</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 30px">place</td>
+        <td>Adresa (poštanski broj i mjesto)</td>
+        <td>27</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 30px">iban</td>
+        <td>Broj računa u IBAN formatu</td>
+        <td>21</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 30px">model</td>
+        <td>Model poziva na broj (bez prefiksa HR)</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 30px">call_no</td>
+        <td>Poziv na broj</td>
+        <td>22</td>
+    </tr>
+    <tr>
+        <td>}</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>purpose</td>
+        <td>Šifra namjene po ISO 20022 standardu</td>
+        <td>4</td>
+    </tr>
+    <tr>
+        <td>description</td>
+        <td>Opis plaćanja</td>
+        <td>35</td>
+    </tr>
+</table>
+
+Primjer podataka u JSON formatu:
+
+<pre>
+{
+    "amount": 100000,
+    "sender": {
+        "name": "Ivan Habunek",
+        "street": "Savska cesta 13",
+        "place": "10000 Zagreb"
+    },
+    "receiver": {
+        "name": "Big Fish Software d.o.o.",
+        "street": "Savska cesta 13",
+        "place": "10000 Zagreb"
+        "iban": "HR6623400091110651272",
+        "model": "00",
+        "call_no": "123456",
+    },
+    "purpose": "ANTS",
+    "description": "Razvoj paketa za bar kodove"
+}
+</pre>
+
+{% endblock %}
