@@ -13,7 +13,7 @@
     },
     "autoload": {
         "psr-4": {
-            "BigFish\\Hub3\\": "src/"
+            "BigFish\\Hub3\\Api\\": "src/"
         }
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4e9b74cceb3fe52adfb00e4fdb8d0abc",
+    "hash": "34f7070adf99ecd7d20dc548289e10b0",
     "packages": [
         {
             "name": "bigfish/pdf417-php",
@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ihabunek/pdf417-php.git",
-                "reference": "4b53c2e08e9642ecf59ec9c34191445a584b2d5b"
+                "reference": "5aaa0b0c71a3cd0dfb73a71cbaac0723e569c4cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ihabunek/pdf417-php/zipball/4b53c2e08e9642ecf59ec9c34191445a584b2d5b",
-                "reference": "4b53c2e08e9642ecf59ec9c34191445a584b2d5b",
+                "url": "https://api.github.com/repos/ihabunek/pdf417-php/zipball/5aaa0b0c71a3cd0dfb73a71cbaac0723e569c4cd",
+                "reference": "5aaa0b0c71a3cd0dfb73a71cbaac0723e569c4cd",
                 "shasum": ""
             },
             "require": {
@@ -34,21 +34,21 @@
                 "MIT"
             ],
             "description": "A library for generating PDF417 barcodes in PHP",
-            "time": "2014-07-19 17:11:20"
+            "time": "2014-07-22 06:29:06"
         },
         {
             "name": "illuminate/support",
-            "version": "v4.2.6",
+            "version": "v4.2.7",
             "target-dir": "Illuminate/Support",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "d59811c8d3e0b7c2b9ffd2c480e698b3352472d0"
+                "reference": "b3d84fa93aa3f2081a935158f860de8308d62d5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/d59811c8d3e0b7c2b9ffd2c480e698b3352472d0",
-                "reference": "d59811c8d3e0b7c2b9ffd2c480e698b3352472d0",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/b3d84fa93aa3f2081a935158f860de8308d62d5a",
+                "reference": "b3d84fa93aa3f2081a935158f860de8308d62d5a",
                 "shasum": ""
             },
             "require": {
@@ -79,12 +79,10 @@
             "authors": [
                 {
                     "name": "Taylor Otwell",
-                    "email": "taylorotwell@gmail.com",
-                    "homepage": "https://github.com/taylorotwell",
-                    "role": "Creator of Laravel"
+                    "email": "taylorotwell@gmail.com"
                 }
             ],
-            "time": "2014-06-29 00:06:59"
+            "time": "2014-07-21 21:14:59"
         },
         {
             "name": "intervention/image",
@@ -790,20 +788,21 @@
         },
         {
             "name": "symfony/icu",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "target-dir": "Symfony/Component/Icu",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Icu.git",
-                "reference": "98e197da54df1f966dd5e8a4992135703569c987"
+                "reference": "d4d85d6055b87f394d941b45ddd3a9173e1e3d2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Icu/zipball/98e197da54df1f966dd5e8a4992135703569c987",
-                "reference": "98e197da54df1f966dd5e8a4992135703569c987",
+                "url": "https://api.github.com/repos/symfony/Icu/zipball/d4d85d6055b87f394d941b45ddd3a9173e1e3d2a",
+                "reference": "d4d85d6055b87f394d941b45ddd3a9173e1e3d2a",
                 "shasum": ""
             },
             "require": {
+                "ext-intl": "*",
                 "lib-icu": ">=4.4",
                 "php": ">=5.3.3",
                 "symfony/intl": "~2.3"
@@ -834,7 +833,7 @@
                 "icu",
                 "intl"
             ],
-            "time": "2013-10-04 10:06:38"
+            "time": "2014-07-25 09:58:17"
         },
         {
             "name": "symfony/intl",
@@ -1486,6 +1485,7 @@
     "stability-flags": {
         "bigfish/pdf417-php": 20
     },
+    "prefer-stable": false,
     "platform": [
 
     ],

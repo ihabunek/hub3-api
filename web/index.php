@@ -3,6 +3,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Silex\Application();
+
+$app['debug'] = true;
+
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 $app->register(new Silex\Provider\FormServiceProvider());
@@ -30,18 +33,16 @@ $app['pdf417'] = function() use ($app) {
 
 // -- Controllers --------------------------------------------------------------
 
-use BigFish\Hub3\Controller;
+use BigFish\Hub3\Api\FrontpageController;
 
-$app['controller'] = $app->share(function() use ($app) {
-    return new Controller($app);
+$app['frontpage_controller'] = $app->share(function() use ($app) {
+    return new FrontpageController($app);
 });
 
 // -- Routing ------------------------------------------------------------------
 
-$app->get('/', "controller:showFormAction");
-$app->post('/', "controller:showFormAction");
+$app->get('/', "frontpage_controller:indexAction");
 
 // -- Go! ----------------------------------------------------------------------
 
-$app['debug'] = true;
 $app->run();

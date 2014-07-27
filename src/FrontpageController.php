@@ -1,16 +1,21 @@
 <?php
 
-namespace BigFish\Hub3;
+namespace BigFish\Hub3\Api;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Controller
+class FrontpageController
 {
     public function __construct(Application $app)
     {
         $this->app = $app;
+    }
+
+    public function indexAction(Request $request)
+    {
+        return $this->app['twig']->render('frontpage.twig');        
     }
 
     public function showFormAction(Request $request)
