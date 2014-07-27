@@ -29,6 +29,10 @@
                     "description": "Post code and place name"
                 }
             },
+            "required": [
+                "name"
+            ]
+        },
         "receiver": {
             "type": "object",
             "description": "Information regarding the person or company receiving the money",
@@ -66,17 +70,25 @@
                     "description": "Call number"
                 }
             },
-            "purpose": {
-                "type": "string",
-                "maxLength": 4,
-                "description": "Purpose code from ISO 20022 standard"
-            },
-            "description": {
-                "type": "string",
-                "maxLength": 35,
-                "description": "Free form description"
-            },
+            "required": [
+                "name",
+                "iban"
+            ]
+        },
+        "purpose": {
+            "type": "string",
+            "maxLength": 4,
+            "description": "Purpose code from ISO 20022 standard"
+        },
+        "description": {
+            "type": "string",
+            "maxLength": 35,
+            "description": "Free form description"
         }
     },
-    "required": ["amount", "sender", "receiver"]
+    "required": [
+        "amount",
+        "sender",
+        "receiver"
+    ]
 }

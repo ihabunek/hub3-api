@@ -33,15 +33,23 @@ $app['pdf417'] = function() use ($app) {
 
 // -- Controllers --------------------------------------------------------------
 
+use BigFish\Hub3\Api\ApiController;
 use BigFish\Hub3\Api\FrontpageController;
 
 $app['frontpage_controller'] = $app->share(function() use ($app) {
     return new FrontpageController($app);
 });
 
+$app['api_controller'] = $app->share(function() use ($app) {
+    return new ApiController($app);
+});
+
 // -- Routing ------------------------------------------------------------------
 
 $app->get('/', "frontpage_controller:indexAction");
+$app->get('/barcode', "api_controller:getBarcodeAction");
+$app->post('/barcode', "api_controller:getBarcodeAction");
+
 
 // -- Go! ----------------------------------------------------------------------
 
