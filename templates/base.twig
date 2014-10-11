@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>{% block title %}HUB3 API{% endblock %}</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -9,5 +9,12 @@
         {% block content %}
         {% endblock %}
     </div>
+    <script type="text/javascript">
+        var tables, i;
+        tables = document.getElementsByTagName('table')
+        for (i = 0; i < tables.length; i++) {
+            tables[i].className = 'table table-striped table-hover table-condensed';
+        };
+    </script>
 </body>
 </html>

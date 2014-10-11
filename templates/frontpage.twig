@@ -1,118 +1,58 @@
 {% extends 'base.twig' %}
 
 {% block content %}
+{% filter markdown %}
 
-<h1>HUB3</h1>
+# HUB3
 
-<p>Jednostavan API za generiranje PDF417 2D barkodova po HUB3 standardu.</p>
+Jednostavan API za generiranje PDF417 2D barkodova po HUB3 standardu.
 
-<p>O HUB3 standardu pročitaj više <a href="http://www.hub.hr/hr/hub3-obrasci"
-target=".blank">ovdje</a>.</p>
+O HUB3 standardu pročitaj više [ovdje](http://www.hub.hr/hr/hub3-obrasci).
 
-<h2>Endpoint: <code>GET /hub3</code></h2>
+## Endpoint: `POST /barcode`
 
 Generira HUB3 bar kod u raznim formatima.
 
-<h4>Parametri</h4>
+### Tijelo zahtjeva
 
-<table>
-</table>
+```
+{
+    "renderer": "image",
+    "options": {
+        // ...
+    },
+    "data": {
+        // ...
+    }
+}
 
-<h4>Podaci za barkod</h4>
+```
 
-<p>Podaci se šalju kodirani u JSON formatu.</p>
 
-<table class="table table-condensed table-zebra table-hover">
-    <tr>
-        <th>Naziv</th>
-        <th>Opis</th>
-        <th>Dužina</th>
-    </tr>
-    <tr>
-        <td>amount</td>
-        <td>Iznos transakcije u HRK</td>
-        <td>15</td>
-    </tr>
-    <tr>
-        <td>sender {</td>
-        <td>Podaci o platitelju</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td style="padding-left: 30px">name</td>
-        <td>Ime i prezime ili naziv tvrtke</td>
-        <td>30</td>
-    </tr>
-    <tr>
-        <td style="padding-left: 30px">street</td>
-        <td>Adresa (ulica i broj)</td>
-        <td>27</td>
-    </tr>
-    <tr>
-        <td style="padding-left: 30px">place</td>
-        <td>Adresa (poštanski broj i mjesto)</td>
-        <td>27</td>
-    </tr>
-    <tr>
-        <td>}</td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>receiver {</td>
-        <td>Podaci o primatelju</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td style="padding-left: 30px">name</td>
-        <td>Ime i prezime ili naziv tvrtke</td>
-        <td>30</td>
-    </tr>
-    <tr>
-        <td style="padding-left: 30px">street</td>
-        <td>Adresa (ulica i broj)</td>
-        <td>27</td>
-    </tr>
-    <tr>
-        <td style="padding-left: 30px">place</td>
-        <td>Adresa (poštanski broj i mjesto)</td>
-        <td>27</td>
-    </tr>
-    <tr>
-        <td style="padding-left: 30px">iban</td>
-        <td>Broj računa u IBAN formatu</td>
-        <td>21</td>
-    </tr>
-    <tr>
-        <td style="padding-left: 30px">model</td>
-        <td>Model poziva na broj (bez prefiksa HR)</td>
-        <td>2</td>
-    </tr>
-    <tr>
-        <td style="padding-left: 30px">call_no</td>
-        <td>Poziv na broj</td>
-        <td>22</td>
-    </tr>
-    <tr>
-        <td>}</td>
-        <td></td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>purpose</td>
-        <td>Šifra namjene po ISO 20022 standardu</td>
-        <td>4</td>
-    </tr>
-    <tr>
-        <td>description</td>
-        <td>Opis plaćanja</td>
-        <td>35</td>
-    </tr>
-</table>
+### Podaci za barkod
+
+Podaci se šalju kodirani u JSON formatu.
+
+| Naziv            | Tip           | Opis                                   |
+| ---------------- | ------------- | -------------------------------------- |
+| amount           | decimal(15,2) | Iznos transakcije u HRK                |
+| purpose          | text(4)       | Šifra namjene po ISO 20022 standardu   |
+| description      | text(35)      | Opis plaćanja                          |
+| **sender**       | object        | Podaci o platitelju                    |
+| sender.name      | text(30)      | Ime i prezime ili naziv tvrtke         |
+| sender.street    | text(30)      | Adresa (ulica i broj)                  |
+| sender.place     | text(27)      | Adresa (poštanski broj i mjesto)       |
+| **receiver**     | object        | Podaci o primatelju                    |
+| receiver.name    | text(30)      | Ime i prezime ili naziv tvrtke         |
+| receiver.street  | text(30)      | Adresa (ulica i broj)                  |
+| receiver.place   | text(27)      | Adresa (poštanski broj i mjesto)       |
+| receiver.iban    | text(21)      | Broj računa u IBAN formatu             |
+| receiver.model   | text(2)       | Model poziva na broj (bez prefiksa HR) |
+| receiver.call_no | text(21)      | Poziv na broj                          |
 
 Primjer podataka u JSON formatu:
 
-<pre>
+```
 {
     "amount": 100000,
     "sender": {
@@ -131,9 +71,10 @@ Primjer podataka u JSON formatu:
     "purpose": "ANTS",
     "description": "Razvoj paketa za bar kodove"
 }
-</pre>
+```
 
-<p>JSON schema koja se koristi za validaciju može se preuzeti
- <a href="/static/hub3-schema.json">ovdje</a>.</p>
+JSON schemu koja se koristi za validaciju možete preuzeti
+ [ovdje](/static/hub3-schema.json).
 
+{% endfilter %}
 {% endblock %}
