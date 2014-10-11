@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Silex\Application();
 
@@ -22,6 +22,10 @@ $app->register(new Silex\Provider\TwigServiceProvider(), [
 
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
     $twig->addExtension(new Twig_Extension_Debug($app));
+    $twig->addFilter(new Twig_SimpleFilter('markdown', function ($text) {
+        $parsedown = new Parsedown();
+        return $parsedown->text($text);
+    }, ['is_safe' => ['html']]));
     return $twig;
 }));
 
@@ -47,7 +51,6 @@ $app['api_controller'] = $app->share(function() use ($app) {
 // -- Routing ------------------------------------------------------------------
 
 $app->get('/', "frontpage_controller:indexAction");
-$app->get('/barcode', "api_controller:getBarcodeAction");
 $app->post('/barcode', "api_controller:getBarcodeAction");
 
 
