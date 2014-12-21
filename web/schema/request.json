@@ -1,0 +1,23 @@
+{
+    "id": "request.json",
+    "title": "HUB3 Request",
+    "description": "The full request for HUB3 API barcode generation",
+    "type": "object",
+    "properties": {
+        "renderer": {
+            "type": "string"
+        },
+        "options": {
+            "type": "object"
+        },
+        "data": {
+            "type": "object",
+            "$ref": "hub3.json"
+        }
+    },
+    "required": [
+        "renderer",
+        "options",
+        "data"
+    ]
+}

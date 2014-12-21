@@ -3,47 +3,36 @@
 namespace BigFish\Hub3\Api;
 
 use JsonSchema\Uri\UriRetriever;
+use JsonSchema\RefResolver;
 use JsonSchema\Validator AS SchemaValidator;
 
 class Validator
 {
-    const SCHEMA_PATH = '/../web/static/hub3-schema.json';
+    /** Relative path to the schema directory. */
+    const SCHEMA_DIR = '/../web/schema';
+
+    /** The schema to use for validating requests. */
+    const REQUEST_SCHEMA = 'request.json';
 
     /**
-     * Validates the whole request body, including HUB3 data.
+     * Validates request contents for the `POST /barcode` endpoint.
      */
-    public function validate(\stdClass $body)
+    public function validate(\stdClass $data)
     {
-        $errors = [];
+        $schemaDir = realpath(__DIR__ . self::SCHEMA_DIR) . DIRECTORY_SEPARATOR;
 
-        if (!isset($body->renderer)) {
-            $errors[] = "Missing required property \"renderer\".";
+        // Hack to form proper URIs on Windows
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $schemaDir = strtr($schemaDir, '\\', '/');
         }
 
-        if (!isset($body->options)) {
-            $errors[] = "Missing required property \"options\".";
-        }
-
-        if (!isset($body->data)) {
-            $errors[] = "Missing required property \"data\".";
-        }
-
-        if (!empty($errors)) {
-            return $errors;
-        }
-
-        return $this->validateData($body->data);
-    }
-
-    /**
-     * Validates HUB3 data from request body.
-     */
-    public function validateData($data)
-    {
-        $schemaPath = __DIR__ . self::SCHEMA_PATH;
+        $schemaPath = $schemaDir . self::REQUEST_SCHEMA;
 
         $retriever = new UriRetriever();
         $schema = $retriever->retrieve("file://" . $schemaPath);
+
+        $refResolver = new RefResolver($retriever);
+        $refResolver->resolve($schema, 'file://' . $schemaDir);
 
         $validator = new SchemaValidator();
         $validator->check($data, $schema);
