@@ -1,10 +1,17 @@
 <?php
 
+use BigFish\Hub3\Api\Controller;
+use BigFish\Hub3\Api\Validator;
+use BigFish\Hub3\Api\Worker;
+use BigFish\PDF417\PDF417;
+
 require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Silex\Application();
 
 $app['debug'] = true;
+
+// -- Providers ----------------------------------------------------------------
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
@@ -29,29 +36,29 @@ $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
     return $twig;
 }));
 
-// -- Library ------------------------------------------------------------------
+// -- Components ---------------------------------------------------------------
+
+$app['controller'] = $app->share(function() use ($app) {
+    return new Controller();
+});
+
+$app['validator'] = $app->share(function() use ($app) {
+    return new Validator();
+});
+
+$app['worker'] = $app->share(function() use ($app) {
+    return new Worker();
+});
 
 $app['pdf417'] = function() use ($app) {
     return new BigFish\PDF417\PDF417();
 };
 
-// -- Controllers --------------------------------------------------------------
-
-use BigFish\Hub3\Api\ApiController;
-use BigFish\Hub3\Api\FrontpageController;
-
-$app['frontpage_controller'] = $app->share(function() use ($app) {
-    return new FrontpageController($app);
-});
-
-$app['api_controller'] = $app->share(function() use ($app) {
-    return new ApiController($app);
-});
-
 // -- Routing ------------------------------------------------------------------
 
-$app->get('/', "frontpage_controller:indexAction");
-$app->post('/barcode', "api_controller:getBarcodeAction");
+$app->get('/', 'controller:indexAction');
+
+$app->post('/barcode', 'controller:barcodeAction');
 
 
 // -- Go! ----------------------------------------------------------------------
