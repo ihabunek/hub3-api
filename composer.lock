@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "64f812c34b3e590ffdde3af89b13519f",
+    "hash": "cbf3719c46a5f4a83c2e07689ddec0a5",
     "packages": [
         {
-            "name": "bigfish/pdf417-php",
-            "version": "dev-master",
+            "name": "bigfish/pdf417",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ihabunek/pdf417-php.git",
-                "reference": "1f4575f19ac143f2bdc7e2b79dfeaa31a31cf7b5"
+                "reference": "20c87543c7b0c0a52d3994dc1c2e1df122069b23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ihabunek/pdf417-php/zipball/1f4575f19ac143f2bdc7e2b79dfeaa31a31cf7b5",
-                "reference": "1f4575f19ac143f2bdc7e2b79dfeaa31a31cf7b5",
+                "url": "https://api.github.com/repos/ihabunek/pdf417-php/zipball/20c87543c7b0c0a52d3994dc1c2e1df122069b23",
+                "reference": "20c87543c7b0c0a52d3994dc1c2e1df122069b23",
                 "shasum": ""
             },
             "require": {
@@ -37,7 +37,7 @@
                 "MIT"
             ],
             "description": "A library for generating PDF417 barcodes in PHP",
-            "time": "2014-12-24 15:14:56"
+            "time": "2014-12-24 18:03:14"
         },
         {
             "name": "erusev/parsedown",
@@ -972,9 +972,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "bigfish/pdf417-php": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "platform": [],
     "platform-dev": []
