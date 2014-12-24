@@ -22,6 +22,11 @@ class Worker
 
         // Encode barcode data
         $pdf417 = new PDF417();
+
+        // Settings required by HUB3 spec
+        $pdf417->securityLevel(4);
+        $pdf417->columns(9);
+
         $barcodeData = $pdf417->encode($string);
 
         // Render
