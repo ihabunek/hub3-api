@@ -68,7 +68,7 @@
                     "description": "Payment model",
                     "pattern": "^\\d*$"
                 },
-                "call_no": {
+                "reference": {
                     "type": "string",
                     "maxLength": 22,
                     "description": "Call number"
@@ -80,7 +80,7 @@
                 "place",
                 "iban",
                 "model",
-                "call_no"
+                "reference"
             ]
         },
         "purpose": {

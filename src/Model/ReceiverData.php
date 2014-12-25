@@ -9,7 +9,7 @@ class ReceiverData
     public $place;
     public $iban;
     public $model;
-    public $call_no;
+    public $reference;
 
     public static function fromObject($object)
     {
@@ -20,7 +20,7 @@ class ReceiverData
         $instance->place = $object->place;
         $instance->iban = $object->iban;
         $instance->model = $object->model;
-        $instance->call_no = $object->call_no;
+        $instance->reference = $object->reference;
 
         return $instance;
     }
