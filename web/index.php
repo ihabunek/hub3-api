@@ -6,6 +6,7 @@ use BigFish\Hub3\Api\Worker;
 use BigFish\PDF417\PDF417;
 
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -33,6 +34,10 @@ $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
     return $twig;
 }));
 
+$app->before(function (Request $request) use ($app) {
+    $app['twig']->addGlobal('current_path', $request->getPathInfo());
+});
+
 // -- Components ---------------------------------------------------------------
 
 $app['controller'] = $app->share(function() use ($app) {
@@ -54,11 +59,22 @@ $app['pdf417'] = function() use ($app) {
 // -- Routing ------------------------------------------------------------------
 
 $app->get('/', function (Application $app) {
-    return $app['twig']->render('frontpage.twig');
-});
+    return $app['twig']->render('pages/about.twig');
+})
+->bind("about");
 
-$app->post('/api/v1/barcode', 'controller:barcodeAction');
+$app->get('/api/v1', function (Application $app) {
+    return $app['twig']->render('pages/usage.twig');
+})
+->bind("usage");
 
+$app->get('/api/v1/demo', function (Application $app) {
+    return $app['twig']->render('pages/demo.twig');
+})
+->bind("demo");
+
+$app->post('/api/v1/barcode', 'controller:barcodeAction')
+    ->bind("barcode");
 
 // -- Go! ----------------------------------------------------------------------
 

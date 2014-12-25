@@ -1,0 +1,38 @@
+{% extends 'base.twig' %}
+
+{% block content %}
+{% filter markdown %}
+
+# HUB-3 Barcode API
+
+A simple API for generating 2D barcodes according to the HUB-3 standard.
+
+![Sample HUB-3 barcode](/static/barcode.png)
+
+## The standard
+
+HUB-3 is a payment slip format used by Croatian banks and published by the
+[Croatian Banking Association](http://www.hub.hr/). It also defines a way
+to encode this data as a 2D barcode in
+[PDF417 format](http://en.wikipedia.org/wiki/PDF417).
+
+You can find out more about the HUB-3 Barcode standard
+[here](http://www.hub.hr/hr/hub3-obrasci) (Croatian, PDF).
+
+This barcode is often printed on HUB-3 payment slips and many banking
+applications can scan and process such barcodes.
+
+![Sample HUB-3 barcode](/static/payment-slip.png)
+
+## Terms
+
+This API is provided free of charge for personal or commercial use. We will do
+our best to keep the service up and running, but cannot provide guarantees of
+the service's availability.
+
+There is no limit on the usage of the API, but please be considerate.
+
+This web is not affiliated with the Croatian Banking Association.
+
+{% endfilter %}
+{% endblock %}

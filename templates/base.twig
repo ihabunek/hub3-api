@@ -2,13 +2,43 @@
 <html>
 <head>
     <title>{% block title %}HUB3 API{% endblock %}</title>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.1/flatly/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/prism/prism.css" rel="stylesheet" />
+    <style type="text/css">
+        .section {
+            width: 800px;
+            margin: 0 auto;
+        }
+        header,
+        footer {
+            width: 800px;
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+        footer {
+            border-top: 1px solid rgb(44, 62, 80);
+            margin-top: 30px;
+            padding-top: 30px;
+            text-align: center;
+        }
+    </style>
+    {% block head %}
+    {% endblock %}
 </head>
 <body>
     <div class="container">
-        {% block content %}
-        {% endblock %}
+        {% include "navbar.twig" %}
+        <div class="section">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <footer>
+            <p>Provided by <a href="http://bigfish.software/">Big Fish Software</a></p>
+        </footer>
     </div>
+
+    <!-- Apply styling to tables -->
     <script type="text/javascript">
         var tables, i;
         tables = document.getElementsByTagName('table')
@@ -16,5 +46,9 @@
             tables[i].className = 'table table-striped table-hover table-condensed';
         };
     </script>
+    <script src="/static/prism/prism.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    {% block tail %}
+    {% endblock %}
 </body>
 </html>

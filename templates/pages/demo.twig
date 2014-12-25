@@ -1,0 +1,149 @@
+{% extends 'base.twig' %}
+
+{% block head %}
+<style type="text/css">
+    #demo-input {
+        font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+        font-size: 0.8em;
+    }
+    #demo-send {
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h1>HUB-3 Barcode API</h1>
+
+<h3>Request</h3>
+
+<textarea id="demo-input" class="form-control language-json" rows="30">
+{
+  "renderer": "image",
+  "options": {
+    "format": "png",
+    "scale": 3,
+    "ratio": 3,
+    "color": "#000",
+    "bgColor": "#fff",
+    "padding": 20
+  },
+  "data": {
+    "amount": 100000,
+    "sender": {
+      "name": "Ivan Habunek",
+      "street": "Savska cesta 13",
+      "place": "10000 Zagreb"
+    },
+    "receiver": {
+      "name": "Big Fish Software d.o.o.",
+      "street": "Savska cesta 13",
+      "place": "10000 Zagreb",
+      "iban": "HR6623400091110651272",
+      "model": "00",
+      "call_no": "123456"
+    },
+    "purpose": "ANTS",
+    "description": "Developing a HUB-3 API"
+  }
+}
+</textarea>
+
+<button id="demo-send" class="btn btn-primary">Send</button>
+
+<section id="demo-response">
+  <h3>Response</h3>
+
+  <div id="demo-output">
+  </div>
+</section>
+
+{% endblock %}
+
+
+{% block tail %}
+<script type="text/javascript">
+
+// Converts an arraybuffer to string
+function to_string(buffer) {
+    var string = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        string += String.fromCharCode(bytes[i]);
+    }
+    return string;
+}
+
+function show_status(oReq) {
+    var contentType = oReq.getResponseHeader('Content-Type');
+    var status = oReq.status + ' ' + oReq.statusText;
+
+    $("#demo-output").append('<p>Status: ' + status +  '</p>');
+    $("#demo-output").append('<p>Content type: ' + contentType +  '</p>');
+}
+
+function show_error(oReq) {
+    var string = to_string(oReq.response);
+    var json = $.parseJSON(string);
+
+    if (json.message) {
+        $("#demo-output").append('<p>Message: ' + json.message + '</p>');
+    }
+
+    if (json.errors) {
+        var errors = '<ul>';
+        $.each(json.errors, function (key, value) {
+            errors += '<li>' + value + '</li>';
+        });
+        errors += '</ul>';
+        $("#demo-output").append('<p>Errors:</p>' + errors);
+    }
+}
+
+function show_barcode(oReq) {
+    var string = to_string(oReq.response);
+
+    var contentType = oReq.getResponseHeader('Content-Type');
+
+    if (contentType.indexOf('image/') === 0) {
+        var base64 = btoa(string);
+        var src = 'data:' + contentType + ';base64,' + base64;
+        $("#demo-output").append($('<img>').attr('src', src));
+    } else {
+        $("#demo-output").append($('<pre><code>' + string + '</code></pre>'));
+    }
+}
+
+$("#demo-send").on("click", function() {
+    // Clear any existing output
+    $("#demo-output").empty();
+
+    // Read data from textarea
+    var data = $("#demo-input").val();
+    var url =  '{{ path('barcode') }}';
+
+    // Post the request
+    var oReq = new XMLHttpRequest();
+    oReq.open("POST", url, true);
+    oReq.responseType = "arraybuffer";
+    oReq.setRequestHeader('Content-Type', 'application\/json');
+
+    oReq.onload = function (oEvent) {
+      var status = oReq.status;
+
+      show_status(oReq);
+
+      if (status == 200) {
+          show_barcode(oReq);
+      } else {
+          show_error(oReq);
+      }
+    };
+
+    oReq.send(data);
+});
+
+</script>
+{% endblock %}
