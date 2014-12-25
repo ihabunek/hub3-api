@@ -73,6 +73,12 @@ $app->get('/api/v1/demo', function (Application $app) {
 $app->post('/api/v1/barcode', 'controller:barcodeAction')
     ->bind("barcode");
 
+// -- New Relic ----------------------------------------------------------------
+
+if (extension_loaded('newrelic')) {
+    newrelic_set_appname("HUB-3");
+}
+
 // -- Go! ----------------------------------------------------------------------
 
 $app->run();
