@@ -1,5 +1,8 @@
 {
+    "name": "bigfish/hub3-api",
+    "description": "An API for creating 2D barcodes following the Croatian Banking Association's HUB3 standard",
     "require": {
+        "php": ">=5.5",
         "bigfish/pdf417": "~0.1.0",
         "erusev/parsedown": "~1.1.0",
         "justinrainbow/json-schema": "~1.3",
