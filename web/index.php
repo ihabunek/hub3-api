@@ -5,9 +5,11 @@ use BigFish\Hub3\Api\Validator;
 use BigFish\Hub3\Api\Worker;
 use BigFish\PDF417\PDF417;
 
+use Silex\Application;
+
 require __DIR__ . '/../vendor/autoload.php';
 
-$app = new Silex\Application();
+$app = new Application();
 
 $app['debug'] = true;
 
@@ -51,9 +53,11 @@ $app['pdf417'] = function() use ($app) {
 
 // -- Routing ------------------------------------------------------------------
 
-$app->get('/', 'controller:indexAction');
+$app->get('/', function (Application $app) {
+    return $app['twig']->render('frontpage.twig');
+});
 
-$app->post('/barcode', 'controller:barcodeAction');
+$app->post('/api/v1/barcode', 'controller:barcodeAction');
 
 
 // -- Go! ----------------------------------------------------------------------
