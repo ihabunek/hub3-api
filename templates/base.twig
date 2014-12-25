@@ -6,14 +6,11 @@
     <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.1/flatly/bootstrap.min.css" rel="stylesheet">
     <link href="/static/prism/prism.css" rel="stylesheet" />
     <style type="text/css">
-        .section {
+        section, header, footer {
             width: 800px;
             margin: 0 auto;
         }
-        header,
-        footer {
-            width: 800px;
-            margin: 0 auto;
+        header, footer {
             margin-top: 20px;
         }
         footer {
@@ -29,10 +26,10 @@
 <body>
     <div class="container">
         {% include "navbar.twig" %}
-        <div class="section">
+        <section>
             {% block content %}
             {% endblock %}
-        </div>
+        </section>
         <footer>
             <p>Provided by <a href="http://bigfish.software/">Big Fish Software</a></p>
         </footer>

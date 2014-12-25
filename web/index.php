@@ -70,6 +70,11 @@ $app->get('/api/v1/demo', function (Application $app) {
 })
 ->bind("demo");
 
+$app->get('/development', function (Application $app) {
+    return $app['twig']->render('pages/development.twig');
+})
+->bind("development");
+
 $app->post('/api/v1/barcode', 'controller:barcodeAction')
     ->bind("barcode");
 
