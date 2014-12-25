@@ -4,6 +4,8 @@ namespace BigFish\Hub3\Api;
 
 use BigFish\PDF417\PDF417;
 use BigFish\PDF417\Renderers\ImageRenderer;
+use BigFish\PDF417\Renderers\JsonRenderer;
+use BigFish\PDF417\Renderers\SvgRenderer;
 
 /**
  * Interfaces with PDF417 lib to create the barcode.
@@ -11,7 +13,9 @@ use BigFish\PDF417\Renderers\ImageRenderer;
 class Worker
 {
     private $renderers = [
-        "image" => ImageRenderer::class
+        "image" => ImageRenderer::class,
+        "json" => JsonRenderer::class,
+        "svg" => SvgRenderer::class,
     ];
 
     /**
@@ -22,7 +26,7 @@ class Worker
      * @param  object $data     HUB3 data.
      *
      * @return array An array with the barcode as the first item (type depends
-     *               on the renderer), and the content type string as the
+     *               on the renderer), and th t type string as the
      *               second item.
      */
     public function render($renderer, $options, $data)
@@ -70,7 +74,7 @@ class Worker
     protected function getRenderer($name, array $options = [])
     {
         if (!isset($this->renderers[$name])) {
-            throw new \InvalidArgumentException("Unknown renderer \"$renderer\".");
+            throw new \InvalidArgumentException("Unknown renderer \"$name\".");
         }
 
         $class = $this->renderers[$name];
