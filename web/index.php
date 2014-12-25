@@ -12,8 +12,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
 
-$app['debug'] = true;
-
 // -- Providers ----------------------------------------------------------------
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
@@ -26,7 +24,6 @@ $app->register(new Silex\Provider\TwigServiceProvider(), [
 ]);
 
 $app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
-    $twig->addExtension(new Twig_Extension_Debug($app));
     $twig->addFilter(new Twig_SimpleFilter('markdown', function ($text) {
         $parsedown = new Parsedown();
         return $parsedown->text($text);
