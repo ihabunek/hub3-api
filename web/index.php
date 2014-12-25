@@ -15,11 +15,6 @@ $app['debug'] = true;
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
-$app->register(new Silex\Provider\FormServiceProvider());
-$app->register(new Silex\Provider\ValidatorServiceProvider());
-$app->register(new Silex\Provider\TranslationServiceProvider(), [
-    'translator.domains' => []
-]);
 
 // -- Templating ---------------------------------------------------------------
 
