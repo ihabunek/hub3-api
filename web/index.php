@@ -77,6 +77,10 @@ $app->post('/api/v1/barcode', 'controller:barcodeAction')
 
 if (extension_loaded('newrelic')) {
     newrelic_set_appname("HUB-3");
+
+    $app->before(function (Request $request) use ($app) {
+        newrelic_name_transaction($request->getPathInfo());
+    });
 }
 
 // -- Go! ----------------------------------------------------------------------
