@@ -18,6 +18,8 @@ type header:
 Content-Type: application/json
 ```
 
+The response content type depends on the renderer used.
+
 ## Request body
 
 ```javascript
@@ -36,18 +38,20 @@ The request body should contain a JSON object with the following keys:
 
 ## Barcode data
 
-The following data is required to create a HUB-3 barcode.
+This is the data that will be encoded into the HUB-3 barcode. The data format
+is defined by the
+[HUB-3 standard](http://www.hub.hr/sites/default/files/2dbc_0.pdf).
 
 | Key                  | Type           | Description                          |
 | -------------------- | -------------- | ------------------------------------ |
 | amount               | decimal (15,2) | Transaction amount in HRK            |
 | purpose              | text (4)       | Purpose code by ISO 20022 standard   |
 | description          | text (35)      | Transaction description              |
-| **sender**           | object         | Sender data                          |
+| **sender**           | **object**     | Sender data                          |
 | > sender.name        | text (30)      | Name and surname, or company name    |
 | > sender.street      | text (30)      | Address (street and number)          |
 | > sender.place       | text (27)      | Address (post code and place name)   |
-| **receiver**         | object         | Receiver data                        |
+| **receiver**         | **object**     | Receiver data                        |
 | > receiver.name      | text (30)      | Name and surname, or company name    |
 | > receiver.street    | text (30)      | Address (street and number)          |
 | > receiver.place     | text (27)      | Address (post code and place name)   |
@@ -55,7 +59,7 @@ The following data is required to create a HUB-3 barcode.
 | > receiver.model     | text (2)       | Payment reference model              |
 | > receiver.reference | text (21)      | Payment reference                    |
 
-Example barcode data:
+Sample barcode data:
 
 ```javascript
 {
@@ -81,6 +85,21 @@ Example barcode data:
 The data is validated by a JSON schema which is available
 [here](/schema/hub3.json).
 
+A note about receiver _model_ and _reference_:
+
+*  The **payment reference** is a string which is attached to the transaction and
+   can be seen by the receiver. It typically contains information which helps
+   the receiver identify the source and prupose of the transaction, such as a
+   personal identification number (OIB) or a customer code.
+
+   It typically contains one or more groups of numbers separated by dashes
+   (e.g. 123-456-789), but this could change in the future.
+
+* The **payment reference model** is a 2 digit string which defines the format
+  of the reference string.
+
+For more details, check out the Croatian Financial Agencies
+[specification](http://www.fina.hr/fgs.axd?id=14625).
 
 ## Renderers
 
@@ -97,9 +116,13 @@ Returns the barcode as a JPG, PNG or GIF image.
 | color   | Barcode color as a hex code.             | `#000000` |
 | bgColor | Background color as a hex code.          | `#ffffff` |
 | scale   | Width of the single unit in the barcode  | 3         |
-| ratio   | Width to height ration of a single unit  | 3         |
+| ratio   | Width to height ratio of a single unit   | 3         |
 
-Sample usage:
+The *scale* and *ratio* will affect the size of the barcode image. Note that
+the HUB-3 specification requires the *ratio* to be 3. If you change it, it might
+not be readable by some devices.
+
+#### Sample usage
 
 ```javascript
 {
@@ -112,7 +135,9 @@ Sample usage:
 }
 ```
 
-Sample output:
+#### Sample response
+
+Content-Type: **image/png**
 
 ![Sample HUB-3 barcode](/static/barcode.png)
 
@@ -129,7 +154,7 @@ Returns the barcode in SVG XML format.
 | color   | Barcode color as a hex code.             | `#000000` |
 
 
-Sample usage:
+#### Sample usage
 
 ```javascript
 {
@@ -143,7 +168,9 @@ Sample usage:
 }
 ```
 
-Sample output (truncated):
+#### Sample response (truncated)
+
+Content-Type: **image/svg+xml**
 
 ```markup
 <?xml version="1.0"?>
@@ -168,7 +195,7 @@ barcode.
 
 This renderer does not take any options.
 
-Sample usage:
+#### Sample usage
 
 ```javascript
 {
@@ -179,7 +206,9 @@ Sample usage:
 }
 ```
 
-Sample output (truncated):
+#### Sample response (truncated)
+
+Content-Type: **application/json**
 
 ```javascript
 [
@@ -192,6 +221,43 @@ Sample output (truncated):
     ...
 ]
 ```
+
+# Errors
+
+The API will always return **HTTP 200 OK** on success.
+
+On error, it's possible to get one of the following:
+
+#### HTTP 400 Bad Request
+
+This means the data you sent doesn't pass validation. The response will contain
+a JSON encoded error message, and possibly an array of validation errors.
+
+For example, if you send invalid barcode data, you might see something like
+this:
+
+```javascript
+{
+    "message": "Validation failed",
+    "errors": [
+        "data.amount: string value found, but a number is required",
+        "data.sender.name: must be at most 30 characters long"
+    ]
+}
+```
+
+Or if you attempt to use a non-existing renderer:
+
+```javascript
+{
+    "message": "Unknown renderer \"foo\".",
+}
+```
+
+#### HTTP 500 Internal Server Error
+
+Congratulations, you found a bug. Please
+[report it](https://github.com/ihabunek/hub3-api/issues).
 
 {% endfilter %}
 {% endblock %}
