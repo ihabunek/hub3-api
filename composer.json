@@ -10,6 +10,9 @@
         "symfony/twig-bridge": "~2.5",
         "twig/twig": "~1.0"
     },
+    "require-dev": {
+        "heroku/heroku-buildpack-php": "*"
+    },
     "autoload": {
         "psr-4": {
             "BigFish\\Hub3\\Api\\": "src/"
