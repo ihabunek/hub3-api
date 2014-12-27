@@ -18,37 +18,18 @@
 
 <h3>Request</h3>
 
-<textarea id="demo-input" class="form-control language-json" rows="30">
-{
-  "renderer": "image",
-  "options": {
-    "format": "png",
-    "scale": 3,
-    "ratio": 3,
-    "color": "#000",
-    "bgColor": "#fff",
-    "padding": 20
-  },
-  "data": {
-    "amount": 100000,
-    "sender": {
-      "name": "Ivan Habunek",
-      "street": "Savska cesta 13",
-      "place": "10000 Zagreb"
-    },
-    "receiver": {
-      "name": "Big Fish Software d.o.o.",
-      "street": "Savska cesta 13",
-      "place": "10000 Zagreb",
-      "iban": "HR6623400091110651272",
-      "model": "00",
-      "reference": "123-456-789"
-    },
-    "purpose": "ANTS",
-    "description": "Developing a HUB-3 API"
-  }
-}
-</textarea>
+<div class="row">
+    <div class="col-md-9">
+        <textarea id="demo-input" class="form-control language-json" rows="30"></textarea>
+    </div>
+    <div class="col-md-3">
+        <h4>Presets</h4>
+        <button class="btn btn-primary btn-sm btn-block preset-button" data-preset="image">Image</button>
+        <button class="btn btn-primary btn-sm btn-block preset-button" data-preset="svg">SVG</button>
+        <button class="btn btn-primary btn-sm btn-block preset-button" data-preset="json">JSON</button>
+    </div>
+</div>
+
 
 <button id="demo-send" class="btn btn-primary">Send</button>
 
@@ -65,6 +46,12 @@
 {% block tail %}
 <script type="text/javascript">
 
+var presets = {
+    "image": {"renderer":"image","options":{"format":"png","scale":3,"ratio":3,"color":"#2c3e50","bgColor":"#eee","padding":20},"data":{"amount":100000,"sender":{"name":"Ivan Habunek","street":"Savska cesta 13","place":"10000 Zagreb"},"receiver":{"name":"Big Fish Software d.o.o.","street":"Savska cesta 13","place":"10000 Zagreb","iban":"HR6623400091110651272","model":"00","reference":"123-456-789"},"purpose":"ANTS","description":"Developing a HUB-3 API"}},
+    "svg" : {"renderer":"svg","options":{"scale":3,"ratio":3,"color":"#2c3e50"},"data":{"amount":100000,"sender":{"name":"Ivan Habunek","street":"Savska cesta 13","place":"10000 Zagreb"},"receiver":{"name":"Big Fish Software d.o.o.","street":"Savska cesta 13","place":"10000 Zagreb","iban":"HR6623400091110651272","model":"00","reference":"123-456-789"},"purpose":"ANTS","description":"Developing a HUB-3 API"}},
+    "json": {"renderer":"json","options":{},"data":{"amount":100000,"sender":{"name":"Ivan Habunek","street":"Savska cesta 13","place":"10000 Zagreb"},"receiver":{"name":"Big Fish Software d.o.o.","street":"Savska cesta 13","place":"10000 Zagreb","iban":"HR6623400091110651272","model":"00","reference":"123-456-789"},"purpose":"ANTS","description":"Developing a HUB-3 API"}}
+};
+
 // Converts an arraybuffer to string
 function to_string(buffer) {
     var string = '';
@@ -76,16 +63,16 @@ function to_string(buffer) {
     return string;
 }
 
-function show_status(oReq) {
-    var contentType = oReq.getResponseHeader('Content-Type');
-    var status = oReq.status + ' ' + oReq.statusText;
+function show_status(request) {
+    var contentType = request.getResponseHeader('Content-Type');
+    var status = request.status + ' ' + request.statusText;
 
     $("#demo-output").append('<p>Status: ' + status +  '</p>');
     $("#demo-output").append('<p>Content type: ' + contentType +  '</p>');
 }
 
-function show_error(oReq) {
-    var string = to_string(oReq.response);
+function show_error(request) {
+    var string = to_string(request.response);
     var json = $.parseJSON(string);
 
     if (json.message) {
@@ -102,10 +89,10 @@ function show_error(oReq) {
     }
 }
 
-function show_barcode(oReq) {
-    var string = to_string(oReq.response);
+function show_barcode(request) {
+    var string = to_string(request.response);
 
-    var contentType = oReq.getResponseHeader('Content-Type');
+    var contentType = request.getResponseHeader('Content-Type');
 
     if (contentType.indexOf('image/') === 0) {
         var base64 = btoa(string);
@@ -116,33 +103,54 @@ function show_barcode(oReq) {
     }
 }
 
-$("#demo-send").on("click", function() {
-    // Clear any existing output
-    $("#demo-output").empty();
+function apply_preset(preset)
+{
+    var json = presets[preset];
+    var string = JSON.stringify(json, null, '    ');
+    $('#demo-input').val(string);
+}
 
-    // Read data from textarea
-    var data = $("#demo-input").val();
-    var url =  '{{ path('barcode') }}';
+$(document).ready(function () {
 
-    // Post the request
-    var oReq = new XMLHttpRequest();
-    oReq.open("POST", url, true);
-    oReq.responseType = "arraybuffer";
-    oReq.setRequestHeader('Content-Type', 'application\/json');
+    // Initially populate with Image preset
+    apply_preset('image');
 
-    oReq.onload = function (oEvent) {
-      var status = oReq.status;
+    // Populate textarea with preset request when the button is clicked
+    $('.preset-button').on('click', function () {
+        var preset = $(this).data('preset');
+        apply_preset(preset);
+    });
 
-      show_status(oReq);
+    // Execute the request when Send is clicked and display the generated
+    // barcode, or the error
+    $("#demo-send").on("click", function() {
+        // Clear any existing output
+        $("#demo-output").empty();
 
-      if (status == 200) {
-          show_barcode(oReq);
-      } else {
-          show_error(oReq);
-      }
-    };
+        // Read data from textarea
+        var data = $("#demo-input").val();
+        var url =  '{{ path('barcode') }}';
 
-    oReq.send(data);
+        // Post the request
+        var request = new XMLHttpRequest();
+        request.open("POST", url, true);
+        request.responseType = "arraybuffer";
+        request.setRequestHeader('Content-Type', 'application\/json');
+
+        request.onload = function (oEvent) {
+          var status = request.status;
+
+          show_status(request);
+
+          if (status == 200) {
+              show_barcode(request);
+          } else {
+              show_error(request);
+          }
+        };
+
+        request.send(data);
+    });
 });
 
 </script>
