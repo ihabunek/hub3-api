@@ -67,8 +67,8 @@ function show_status(request) {
     var contentType = request.getResponseHeader('Content-Type');
     var status = request.status + ' ' + request.statusText;
 
-    $("#demo-output").append('<p>Status: ' + status +  '</p>');
-    $("#demo-output").append('<p>Content type: ' + contentType +  '</p>');
+    $("#demo-output").append('<p>Status: <b>' + status +  '</b></p>');
+    $("#demo-output").append('<p>Content type: <b>' + contentType +  '</b></p>');
 }
 
 function show_error(request) {
