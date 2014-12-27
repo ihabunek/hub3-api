@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b887fc0f41be935f84b0c8a2e546161a",
+    "hash": "961b2061f1b258f7a45bfa45465b5ec0",
     "packages": [
         {
             "name": "bigfish/pdf417",
@@ -978,7 +978,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.5"
+        "php": ">=5.5",
+        "ext-bcmath": "*"
     },
     "platform-dev": []
 }
