@@ -9,6 +9,9 @@
     #demo-send {
         margin-top: 20px;
     }
+    #demo-response {
+        display: none;
+    }
 </style>
 {% endblock %}
 
@@ -30,16 +33,13 @@
     </div>
 </div>
 
-
 <button id="demo-send" class="btn btn-primary">Send</button>
 
 <section id="demo-response">
-  <h3>Response</h3>
-
-  <div id="demo-output">
-  </div>
+    <h3>Response</h3>
+    <div id="demo-output">
+    </div>
 </section>
-
 {% endblock %}
 
 
@@ -63,10 +63,11 @@ function to_string(buffer) {
     return string;
 }
 
-function show_status(request) {
+function show_status(request, duration) {
     var contentType = request.getResponseHeader('Content-Type');
     var status = request.status + ' ' + request.statusText;
 
+    $("#demo-output").append('<p>Time taken: <b>' + duration +  ' ms</b></p>');
     $("#demo-output").append('<p>Status: <b>' + status +  '</b></p>');
     $("#demo-output").append('<p>Content type: <b>' + contentType +  '</b></p>');
 }
@@ -99,12 +100,11 @@ function show_barcode(request) {
         var src = 'data:' + contentType + ';base64,' + base64;
         $("#demo-output").append($('<img>').attr('src', src));
     } else {
-        $("#demo-output").append($('<pre><code>' + string + '</code></pre>'));
+        $("#demo-output").append('<pre><code>' + string + '</code></pre>');
     }
 }
 
-function apply_preset(preset)
-{
+function apply_preset(preset) {
     var json = presets[preset];
     var string = JSON.stringify(json, null, '    ');
     $('#demo-input').val(string);
@@ -124,12 +124,12 @@ $(document).ready(function () {
     // Execute the request when Send is clicked and display the generated
     // barcode, or the error
     $("#demo-send").on("click", function() {
-        // Clear any existing output
+        $("#demo-response").hide();
         $("#demo-output").empty();
 
-        // Read data from textarea
         var data = $("#demo-input").val();
         var url =  '{{ path('barcode') }}';
+        var start = (new Date()).getTime();
 
         // Post the request
         var request = new XMLHttpRequest();
@@ -137,16 +137,19 @@ $(document).ready(function () {
         request.responseType = "arraybuffer";
         request.setRequestHeader('Content-Type', 'application\/json');
 
-        request.onload = function (oEvent) {
-          var status = request.status;
+        request.onload = function (event) {
+            var end = (new Date()).getTime();
+            var duration = end - start;
 
-          show_status(request);
+            show_status(request, duration);
 
-          if (status == 200) {
-              show_barcode(request);
-          } else {
-              show_error(request);
-          }
+            if (request.status == 200) {
+                show_barcode(request);
+            } else {
+                show_error(request);
+            }
+
+            $("#demo-response").show();
         };
 
         request.send(data);
