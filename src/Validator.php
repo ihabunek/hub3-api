@@ -17,7 +17,7 @@ class Validator
     /**
      * Validates request contents for the `POST /barcode` endpoint.
      */
-    public function validate(\stdClass $data)
+    public function validate($data)
     {
         $schemaDir = realpath(__DIR__ . self::SCHEMA_DIR) . DIRECTORY_SEPARATOR;
 
