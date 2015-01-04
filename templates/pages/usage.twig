@@ -5,7 +5,7 @@
 
 # HUB-3 Barcode API
 
-The API specifies a single endpoint:
+This API specifies a single endpoint:
 
 ```
 POST /api/v1/barcode
@@ -18,7 +18,8 @@ type header:
 Content-Type: application/json
 ```
 
-The response content type depends on the renderer used.
+On success, the server returns a **HTTP 200 OK** response, with the barcode
+encoded in the response body. Content type depends on the renderer used.
 
 ## Request body
 
@@ -32,9 +33,16 @@ The response content type depends on the renderer used.
 
 The request body should contain a JSON object with the following keys:
 
-* **renderer** - The name of the renderer to use
-* **options** - The renderer options (depends on the renderer)
-* **data** - Barcode data
+
+| Key       | Type    | Description                                     |
+| --------- | ------- | ----------------------------------------------- |
+| renderer  | string  | Name of the renderer to use.                    |
+| options   | object  | Renderer-specific configuration.                |
+| data      | object  | Data to be encoded into the barcode.            |
+
+The **renderer** is the component which renders the barcode to the target
+format. This can be an image, a SVG document or something else. Each renderer
+has a set of **options** which configures it's behaviour.
 
 ## Barcode data
 
@@ -42,22 +50,22 @@ This is the data that will be encoded into the HUB-3 barcode. The data format
 is defined by the
 [HUB-3 standard](http://www.hub.hr/sites/default/files/2dbc_0.pdf).
 
-| Key                  | Type           | Description                          |
-| -------------------- | -------------- | ------------------------------------ |
-| amount               | decimal (15,2) | Transaction amount in HRK            |
-| purpose              | text (4)       | Purpose code by ISO 20022 standard   |
-| description          | text (35)      | Transaction description              |
-| **sender**           | **object**     | Sender data                          |
-| > sender.name        | text (30)      | Name and surname, or company name    |
-| > sender.street      | text (30)      | Address (street and number)          |
-| > sender.place       | text (27)      | Address (post code and place name)   |
-| **receiver**         | **object**     | Receiver data                        |
-| > receiver.name      | text (30)      | Name and surname, or company name    |
-| > receiver.street    | text (30)      | Address (street and number)          |
-| > receiver.place     | text (27)      | Address (post code and place name)   |
-| > receiver.iban      | text (21)      | Account number (IBAN)                |
-| > receiver.model     | text (2)       | Payment reference model              |
-| > receiver.reference | text (21)      | Payment reference                    |
+| Key                  | Type           | Description                         |
+| -------------------- | -------------- | ----------------------------------- |
+| amount               | decimal (15,2) | Transaction amount in HRK           |
+| purpose              | text (4)       | Purpose code by ISO 20022 standard  |
+| description          | text (35)      | Transaction description             |
+| **sender**           | **object**     | Sender data                         |
+| > sender.name        | text (30)      | Name and surname, or company name   |
+| > sender.street      | text (30)      | Address (street and number)         |
+| > sender.place       | text (27)      | Address (post code and place name)  |
+| **receiver**         | **object**     | Receiver data                       |
+| > receiver.name      | text (30)      | Name and surname, or company name   |
+| > receiver.street    | text (30)      | Address (street and number)         |
+| > receiver.place     | text (27)      | Address (post code and place name)  |
+| > receiver.iban      | text (21)      | Account number (IBAN)               |
+| > receiver.model     | text (2)       | Payment reference model             |
+| > receiver.reference | text (21)      | Payment reference                   |
 
 Sample barcode data:
 
