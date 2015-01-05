@@ -56,15 +56,7 @@ class Controller
         } catch (\InvalidArgumentException $ex) {
             return $this->error(400, $ex->getMessage());
         } catch (\Exception $ex) {
-            if ($app['debug']) {
-                $message = $ex->getMessage();
-                $errors = explode("\n", $ex->getTraceAsString());
-            } else {
-                $message = "An unexpected error has occured.";
-                $errors = null;
-            }
-
-            return $this->error(500, $message, $errors);
+            return $this->handleException($app, $ex);
         }
 
         // Return the response
@@ -72,6 +64,34 @@ class Controller
         return new Response($barcode, 200, [
             "Content-Type" => $contentType
         ]);
+    }
+
+    /**
+     * Processes an unexpected exception and forms a response.
+     *
+     * @param  Application $app  Application object.
+     * @param  Exception   $ex   The exception.
+     *
+     * @return Symfony\Component\HttpFoundation\JsonResponse
+     */
+    private function handleException(Application $app, Exception $ex)
+    {
+        // In debug mode, include exception details, otherwise just give a
+        // generic error message.
+        if ($app['debug']) {
+            $message = $ex->getMessage();
+            $errors = explode("\n", $ex->getTraceAsString());
+        } else {
+            $message = "An unexpected error has occured.";
+            $errors = null;
+        }
+
+        // Report to new relic (only in production)
+        if (!$app['debug'] && extension_loaded('newrelic')) {
+            newrelic_notice_error("Caught an unhandled exception", $ex);
+        }
+
+        return $this->error(500, $message, $errors);
     }
 
     /**
