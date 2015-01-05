@@ -85,6 +85,10 @@ class Controller
      */
     protected function barcodeAction(Application $app, $data)
     {
+        if (!isset($data->options)) {
+            $data->options = new \stdClass();
+        }
+
         // Validate
         $errors = $app['validator']->validate($data);
         if (!empty($errors)) {

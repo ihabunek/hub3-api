@@ -46,6 +46,10 @@
 {% block tail %}
 <script type="text/javascript">
 
+//
+// Judge me not by my questionable Javascript skills.
+//
+
 var presets = {
     "image": {"renderer":"image","options":{"format":"png","scale":3,"ratio":3,"color":"#2c3e50","bgColor":"#eee","padding":20},"data":{"amount":100000,"sender":{"name":"Ivan Habunek","street":"Savska cesta 13","place":"10000 Zagreb"},"receiver":{"name":"Big Fish Software d.o.o.","street":"Savska cesta 13","place":"10000 Zagreb","iban":"HR6623400091110651272","model":"00","reference":"123-456-789"},"purpose":"ANTS","description":"Developing a HUB-3 API"}},
     "svg" : {"renderer":"svg","options":{"scale":3,"ratio":3,"color":"#2c3e50"},"data":{"amount":100000,"sender":{"name":"Ivan Habunek","street":"Savska cesta 13","place":"10000 Zagreb"},"receiver":{"name":"Big Fish Software d.o.o.","street":"Savska cesta 13","place":"10000 Zagreb","iban":"HR6623400091110651272","model":"00","reference":"123-456-789"},"purpose":"ANTS","description":"Developing a HUB-3 API"}},
@@ -104,6 +108,18 @@ function show_barcode(request) {
     }
 }
 
+function show_link(data) {
+    var $link;
+    var query = http_build_query(data);
+    var url =  '{{ url('barcode_post') }}';
+
+    url = url + '?' + query;
+
+    $link = $("<p>").append($("<a>").attr('href', url).text("Share this barcode"));
+
+    $("#demo-output").append($link);
+}
+
 function apply_preset(preset) {
     var json = presets[preset];
     var string = JSON.stringify(json, null, '    ');
@@ -145,6 +161,7 @@ $(document).ready(function () {
 
             if (request.status == 200) {
                 show_barcode(request);
+                show_link(JSON.parse(data));
             } else {
                 show_error(request);
             }
@@ -155,6 +172,67 @@ $(document).ready(function () {
         request.send(data);
     });
 });
+
+// Taken from: http://phpjs.org/functions/urlencode/
+function urlencode(str) {
+
+  str = (str + '').toString();
+
+  return encodeURIComponent(str)
+    .replace(/!/g, '%21')
+    .replace(/'/g, '%27')
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29')
+    .replace(/\*/g, '%2A')
+    .replace(/%20/g, '+');
+}
+
+// Taken from: http://phpjs.org/functions/http_build_query/
+function http_build_query(formdata, numeric_prefix, arg_separator) {
+    var value, key, tmp = [],
+    that = this;
+
+    var _http_build_query_helper = function (key, val, arg_separator) {
+        var k, tmp = [];
+        if (val === true) {
+            val = '1';
+        } else if (val === false) {
+            val = '0';
+        }
+        if (val != null) {
+            if (typeof val === 'object') {
+                for (k in val) {
+                    if (val[k] != null) {
+                        tmp.push(_http_build_query_helper(key + '[' + k + ']', val[k], arg_separator));
+                    }
+                }
+                return tmp.join(arg_separator);
+            } else if (typeof val !== 'function') {
+                return that.urlencode(key) + '=' + that.urlencode(val);
+            } else {
+                throw new Error('There was an error processing for http_build_query().');
+            }
+        } else {
+            return '';
+        }
+    };
+
+    if (!arg_separator) {
+        arg_separator = '&';
+    }
+    for (key in formdata) {
+        value = formdata[key];
+        if (numeric_prefix && !isNaN(key)) {
+            key = String(numeric_prefix) + key;
+        }
+        var query = _http_build_query_helper(key, value, arg_separator);
+        if (query !== '') {
+            tmp.push(query);
+        }
+    }
+
+    return tmp.join(arg_separator);
+}
 
 </script>
 {% endblock %}
