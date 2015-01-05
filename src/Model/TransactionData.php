@@ -40,8 +40,8 @@ class TransactionData
         $parts[] = $this->receiver->street;
         $parts[] = $this->receiver->place;
         $parts[] = $this->receiver->iban;
-        $parts[] = $this->receiver->model;
-        $parts[] = "HR" . $this->receiver->reference;
+        $parts[] = "HR" . $this->receiver->model;
+        $parts[] = $this->receiver->reference;
         $parts[] = $this->purpose;
         $parts[] = $this->description;
 
