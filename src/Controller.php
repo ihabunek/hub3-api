@@ -56,7 +56,15 @@ class Controller
         } catch (\InvalidArgumentException $ex) {
             return $this->error(400, $ex->getMessage());
         } catch (\Exception $ex) {
-            return $this->error(500, "An unexpected error has occured.");
+            if ($app['debug']) {
+                $message = $ex->getMessage();
+                $errors = explode("\n", $ex->getTraceAsString());
+            } else {
+                $message = "An unexpected error has occured.";
+                $errors = null;
+            }
+
+            return $this->error(500, $message, $errors);
         }
 
         // Return the response

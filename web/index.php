@@ -12,6 +12,11 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
 
+// Enable debug mode if HUB3_DEBUG environment variable is set
+if (getenv('HUB3_DEBUG')) {
+    $app['debug'] = true;
+}
+
 // -- Providers ----------------------------------------------------------------
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
@@ -80,7 +85,7 @@ $app->post('/api/v1/barcode', 'controller:barcodeAction')
 
 // -- New Relic ----------------------------------------------------------------
 
-if (extension_loaded('newrelic')) {
+if (!$app['debug'] && extension_loaded('newrelic')) {
     newrelic_set_appname("HUB-3");
 
     $app->before(function (Request $request) use ($app) {
