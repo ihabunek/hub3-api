@@ -80,8 +80,11 @@ $app->get('/development', function (Application $app) {
 })
 ->bind("development");
 
-$app->post('/api/v1/barcode', 'controller:barcodeAction')
-    ->bind("barcode");
+$app->get('/api/v1/barcode', 'controller:barcodeGetAction')
+    ->bind("barcode_get");
+
+$app->post('/api/v1/barcode', 'controller:barcodePostAction')
+    ->bind("barcode_post");
 
 // -- New Relic ----------------------------------------------------------------
 

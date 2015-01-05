@@ -19,7 +19,45 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class Controller
 {
-    public function barcodeAction(Application $app, Request $request)
+
+    /**
+     * Generates a barcode from URL encoded data from a GET request.
+     *
+     * @param  Application $app      Application object.
+     * @param  Request     $request  The request.
+     *
+     * @return Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function barcodeGetAction(Application $app, Request $request)
+    {
+        $array = $request->query->all();
+
+        // A hacky, but very simple way to convert the array to an object
+        // (as expected by the validator)
+        $object = json_decode(json_encode($array));
+
+        // Convert the amount to a float (as expected by the validator) since
+        // all URL parameters are transferred as strings
+        if (isset($object->data->amount)) {
+            if (!is_numeric($object->data->amount)) {
+                return $this->error(400, "Validation failed", ["data.amount must be numeric"]);
+            }
+
+            $object->data->amount = floatval($object->data->amount);
+        }
+
+        return $this->barcodeAction($app, $object);
+    }
+
+    /**
+     * Generates a barcode from JSON encoded data in the body of a POST request.
+     *
+     * @param  Application $app      Application object.
+     * @param  Request     $request  The request.
+     *
+     * @return Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function barcodePostAction(Application $app, Request $request)
     {
         // Check content type header
         $ct = $request->headers->get('Content-Type');
@@ -34,16 +72,29 @@ class Controller
             return $this->error(400, "Invalid JSON data: $message");
         }
 
+        return $this->barcodeAction($app, $body);
+    }
+
+    /**
+     * Generates the barcode from given data.
+     *
+     * @param  Application $app  Application object.
+     * @param  object      $data Request data.
+     *
+     * @return Symfony\Component\HttpFoundation\JsonResponse
+     */
+    protected function barcodeAction(Application $app, $data)
+    {
         // Validate
-        $errors = $app['validator']->validate($body);
+        $errors = $app['validator']->validate($data);
         if (!empty($errors)) {
             return $this->error(400, "Validation failed", $errors);
         }
 
         // Extract parameters
-        $renderer = $body->renderer;
-        $options = (array) $body->options;
-        $data = $body->data;
+        $renderer = $data->renderer;
+        $options = (array) $data->options;
+        $data = $data->data;
 
         // Check the renderer exists
         if (!$app['worker']->rendererExists($renderer)) {

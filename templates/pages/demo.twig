@@ -128,7 +128,7 @@ $(document).ready(function () {
         $("#demo-output").empty();
 
         var data = $("#demo-input").val();
-        var url =  '{{ path('barcode') }}';
+        var url =  '{{ path('barcode_post') }}';
         var start = (new Date()).getTime();
 
         // Post the request
