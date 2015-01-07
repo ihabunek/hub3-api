@@ -5,34 +5,22 @@
 
 # HUB-3 Barcode API
 
-This API specifies a single endpoint:
+This API uses a single endpoint:
 
-```
-POST /api/v1/barcode
+```bold
+{{ url('barcode_get') }}
 ```
 
-Data is sent JSON encoded in the request body. Make sure to set your content
-type header:
-
-```
-Content-Type: application/json
-```
+It's possible to make GET or POST request to that URL. For GET requests, the
+data is sent URL-encoded in the query string. For POST requests, it's sent
+JSON encoded in the request body. See below for details.
 
 On success, the server returns a **HTTP 200 OK** response, with the barcode
 encoded in the response body. Content type depends on the renderer used.
 
-## Request body
+## Request data
 
-```javascript
-{
-    "renderer": "image",
-    "options": { ... }
-    "data": { ... }
-}
-```
-
-The request body should contain a JSON object with the following keys:
-
+The request data should contain an object with the following keys:
 
 | Key       | Type    | Description                                     |
 | --------- | ------- | ----------------------------------------------- |
@@ -43,6 +31,16 @@ The request body should contain a JSON object with the following keys:
 The **renderer** is the component which renders the barcode to the target
 format. This can be an image, a SVG document or something else. Each renderer
 has a set of **options** which configures it's behaviour.
+
+The request data in JSON would look like this:
+
+```javascript
+{
+    "renderer": "image",
+    "options": { ... }
+    "data": { ... }
+}
+```
 
 ## Barcode data
 
@@ -67,7 +65,7 @@ is defined by the
 | > receiver.model     | text (2)       | Payment reference model             |
 | > receiver.reference | text (21)      | Payment reference                   |
 
-Sample barcode data:
+Example barcode data in JSON:
 
 ```javascript
 {
@@ -90,9 +88,6 @@ Sample barcode data:
 }
 ```
 
-The data is validated by a JSON schema which is available
-[here](/schema/hub3.json).
-
 A note about receiver _model_ and _reference_:
 
 *  The **payment reference** is a string which is attached to the transaction and
@@ -106,8 +101,79 @@ A note about receiver _model_ and _reference_:
 * The **payment reference model** is a 2 digit string which defines the format
   of the reference string.
 
-For more details, check out the Croatian Financial Agencies
-[specification](http://www.fina.hr/fgs.axd?id=14625).
+For more details, check out the Croatian Financial Agency's
+[specification](http://www.fina.hr/fgs.axd?id=14625) (PDF, Croatian).
+
+The data is validated by a JSON schema which is available
+[here](/schema/hub3.json).
+
+
+## Encoding the data
+
+The above examples show how to encode the data in JSON for POST requests.
+For GET requests, the same data structure must be sent URL-encoded in the query
+string.
+
+For example, consider this full request in JSON:
+
+```text
+{
+    "renderer": "image",
+    "options": {
+        "format": "png",
+        "color": "#000000"
+    },
+    "data": {
+        "amount": 100000,
+        "sender": {
+            "name": "Ivan Habunek",
+            "street": "Savska cesta 13",
+            "place": "10000 Zagreb"
+        },
+        "receiver": {
+            "name": "Big Fish Software d.o.o.",
+            "street": "Savska cesta 13",
+            "place": "10000 Zagreb",
+            "iban": "HR6623400091110651272",
+            "model": "00",
+            "reference": "123-456-789"
+        },
+        "purpose": "ANTS",
+        "description": "Developing a HUB-3 API"
+    }
+}
+```
+
+The same data, prepared for URL-encoding:
+
+```text
+renderer=image
+options[format]=png
+options[color]=#000000
+data[amount]=100000
+data[sender][name]=Ivan Habunek
+data[sender][street]=Savska cesta 13
+data[sender][place]=10000 Zagreb
+data[receiver][name]=Big Fish Software d.o.o.
+data[receiver][street]=Savska cesta 13
+data[receiver][place]=10000 Zagreb
+data[receiver][iban]=HR6623400091110651272
+data[receiver][model]=00
+data[receiver][reference]=123-456-789
+data[purpose]=ANTS
+data[description]=Developing a HUB-3 API
+```
+
+URL-encode these lines, and then join them with `&`. The resulting query string
+is:
+
+```text
+renderer=image&options%5Bformat%5D=png&options%5Bcolor%5D=%23000000&data%5Bamount%5D=100000&data%5Bsender%5D%5Bname%5D=Ivan+Habunek&data%5Bsender%5D%5Bstreet%5D=Savska+cesta+13&data%5Bsender%5D%5Bplace%5D=10000+Zagreb&data%5Breceiver%5D%5Bname%5D=Big+Fish+Software+d.o.o.&data%5Breceiver%5D%5Bstreet%5D=Savska+cesta+13&data%5Breceiver%5D%5Bplace%5D=10000+Zagreb&data%5Breceiver%5D%5Biban%5D=HR6623400091110651272&data%5Breceiver%5D%5Bmodel%5D=00&data%5Breceiver%5D%5Breference%5D=123-456-789&data%5Bpurpose%5D=ANTS&data%5Bdescription%5D=Developing+a+HUB-3+API
+```
+
+Finally, add the query string to the API endpoint to form the
+<a href="{{ url('barcode_get') }}?renderer=image&options%5Bformat%5D=png&options%5Bcolor%5D=%23000000&data%5Bamount%5D=100000&data%5Bsender%5D%5Bname%5D=Ivan+Habunek&data%5Bsender%5D%5Bstreet%5D=Savska+cesta+13&data%5Bsender%5D%5Bplace%5D=10000+Zagreb&data%5Breceiver%5D%5Bname%5D=Big+Fish+Software+d.o.o.&data%5Breceiver%5D%5Bstreet%5D=Savska+cesta+13&data%5Breceiver%5D%5Bplace%5D=10000+Zagreb&data%5Breceiver%5D%5Biban%5D=HR6623400091110651272&data%5Breceiver%5D%5Bmodel%5D=00&data%5Breceiver%5D%5Breference%5D=123-456-789&data%5Bpurpose%5D=ANTS&data%5Bdescription%5D=Developing+a+HUB-3+API">GET URL</a>.
+
 
 ## Renderers
 
