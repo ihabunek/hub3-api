@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "961b2061f1b258f7a45bfa45465b5ec0",
+    "hash": "c666ba93e51afb3ae2f8642621e3f956",
     "packages": [
         {
             "name": "bigfish/pdf417",
-            "version": "0.1.1",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ihabunek/pdf417-php.git",
-                "reference": "75524be208135c146d78603022e288c80dd4ec31"
+                "reference": "df650729bbaf680b6564be25954d90cfcacc54d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ihabunek/pdf417-php/zipball/75524be208135c146d78603022e288c80dd4ec31",
-                "reference": "75524be208135c146d78603022e288c80dd4ec31",
+                "url": "https://api.github.com/repos/ihabunek/pdf417-php/zipball/df650729bbaf680b6564be25954d90cfcacc54d6",
+                "reference": "df650729bbaf680b6564be25954d90cfcacc54d6",
                 "shasum": ""
             },
             "require": {
@@ -39,7 +39,7 @@
                 "MIT"
             ],
             "description": "A library for generating PDF417 barcodes in PHP",
-            "time": "2014-12-26 12:37:28"
+            "time": "2015-01-08 20:42:59"
         },
         {
             "name": "erusev/parsedown",
