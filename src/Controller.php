@@ -32,6 +32,9 @@ class Controller
     public function barcodeGetAction(Application $app, Request $request)
     {
         $array = $request->query->all();
+        if (empty($array)) {
+            return $this->error(400, "No query parameters given");
+        }
 
         // A hacky, but very simple way to convert the array to an object
         // (as expected by the validator)
