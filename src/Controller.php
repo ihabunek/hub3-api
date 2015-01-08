@@ -2,6 +2,8 @@
 
 namespace BigFish\Hub3\Api;
 
+use Exception;
+
 use JsonSchema\Uri\UriRetriever;
 use JsonSchema\Validator;
 
@@ -143,7 +145,7 @@ class Controller
 
         // Report to new relic (only in production)
         if (!$app['debug'] && extension_loaded('newrelic')) {
-            newrelic_notice_error("Caught an unhandled exception", $ex);
+            newrelic_notice_error("Unhandled exception.", $ex);
         }
 
         return $this->error(500, $message, $errors);
