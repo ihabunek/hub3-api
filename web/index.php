@@ -92,7 +92,7 @@ if (!$app['debug'] && extension_loaded('newrelic')) {
     newrelic_set_appname("HUB-3");
 
     $app->before(function (Request $request) use ($app) {
-        newrelic_name_transaction($request->getPathInfo());
+        newrelic_name_transaction($request->get("_route"));
     });
 }
 

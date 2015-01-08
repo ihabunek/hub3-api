@@ -21,7 +21,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class Controller
 {
-
     /**
      * Generates a barcode from URL encoded data from a GET request.
      *
@@ -48,7 +47,7 @@ class Controller
             $object->data->amount = floatval($object->data->amount);
         }
 
-        return $this->barcodeAction($app, $object);
+        return $this->barcodeAction($app, $request, $object);
     }
 
     /**
@@ -74,7 +73,7 @@ class Controller
             return $this->error(400, "Invalid JSON data: $message");
         }
 
-        return $this->barcodeAction($app, $body);
+        return $this->barcodeAction($app, $request, $body);
     }
 
     /**
@@ -85,7 +84,7 @@ class Controller
      *
      * @return Symfony\Component\HttpFoundation\JsonResponse
      */
-    protected function barcodeAction(Application $app, $data)
+    protected function barcodeAction(Application $app, Request $request, $data)
     {
         if (!isset($data->options)) {
             $data->options = new \stdClass();
@@ -113,7 +112,7 @@ class Controller
         } catch (\InvalidArgumentException $ex) {
             return $this->error(400, $ex->getMessage());
         } catch (\Exception $ex) {
-            return $this->handleException($app, $ex);
+            return $this->handleException($app, $request, $ex);
         }
 
         // Return the response
@@ -131,7 +130,7 @@ class Controller
      *
      * @return Symfony\Component\HttpFoundation\JsonResponse
      */
-    private function handleException(Application $app, Exception $ex)
+    private function handleException(Application $app, Request $request, Exception $ex)
     {
         // In debug mode, include exception details, otherwise just give a
         // generic error message.
@@ -145,10 +144,30 @@ class Controller
 
         // Report to new relic (only in production)
         if (!$app['debug'] && extension_loaded('newrelic')) {
-            newrelic_notice_error("Unhandled exception.", $ex);
+            newrelic_notice_error("Unhandled exception: " . $ex->getMessage(), $ex);
         }
 
+        $this->dumpError($request, $ex);
+
         return $this->error(500, $message, $errors);
+    }
+
+    /**
+     * Saves error data to disk for debugging.
+     */
+    private function dumpError(Request $request, Exception $ex)
+    {
+        $query = $request->query->all();
+        $query = json_encode($query, JSON_PRETTY_PRINT);
+
+        $body = $request->getContent();
+
+        $time = date('c');
+
+        $path = __DIR__ . '/../var/dump-' . uniqid();
+        $dump = "Time: $time\n\nQuery:\n$query\n\nBody:\n$body\n\nException: $ex\n";
+
+        @file_put_contents($path, $dump);
     }
 
     /**
