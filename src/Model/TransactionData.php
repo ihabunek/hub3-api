@@ -25,7 +25,7 @@ class TransactionData
 
     public function toString()
     {
-        $amount = (integer) ($this->amount * 100);
+        $amount = round($this->amount * 100);
         $amount = str_pad($amount, 15, '0', STR_PAD_LEFT);
 
         $parts = [];
