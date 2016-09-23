@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a3a7d0c1e947c0c668140a30ebc9ae62",
-    "content-hash": "30237484406329d8176e0c6450d7f395",
+    "hash": "8d151df4f6b369e1a277748fc07e0acd",
+    "content-hash": "e104dfc973e20ddb967b1fe3f93a8f40",
     "packages": [
         {
             "name": "bigfish/pdf417",
@@ -44,16 +44,16 @@
         },
         {
             "name": "erusev/parsedown",
-            "version": "1.1.4",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "495e7ac73bb5fde6b857b88ff2bb1b5e79a4263a"
+                "reference": "3ebbd730b5c2cf5ce78bc1bf64071407fc6674b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/495e7ac73bb5fde6b857b88ff2bb1b5e79a4263a",
-                "reference": "495e7ac73bb5fde6b857b88ff2bb1b5e79a4263a",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/3ebbd730b5c2cf5ce78bc1bf64071407fc6674b7",
+                "reference": "3ebbd730b5c2cf5ce78bc1bf64071407fc6674b7",
                 "shasum": ""
             },
             "type": "library",
@@ -79,7 +79,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2014-11-29 02:29:14"
+            "time": "2015-10-04 16:44:32"
         },
         {
             "name": "intervention/image",
