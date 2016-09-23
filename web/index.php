@@ -21,18 +21,20 @@ if (getenv('HUB3_DEBUG')) {
 
 $ravenUrl = getenv('HUB3_RAVEN_URL');
 if (!empty($ravenUrl)) {
-    $app['raven'] = $app->share(function () use ($ravenUrl) {
+    $app['raven'] = function () use ($ravenUrl) {
         $client = new Raven_Client($ravenUrl, [
             'curl_method' => 'async'
         ]);
 
         return $client->install();
-    });
+    };
+
+    // Init raven
+    $app['raven'];
 }
 
 // -- Providers ----------------------------------------------------------------
 
-$app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 $app->register(new Silex\Provider\ServiceControllerServiceProvider());
 
 // -- Templating ---------------------------------------------------------------
@@ -41,13 +43,14 @@ $app->register(new Silex\Provider\TwigServiceProvider(), [
     'twig.path' => __DIR__ . '/../templates'
 ]);
 
-$app['twig'] = $app->share($app->extend('twig', function($twig, $app) {
+$app->extend('twig', function($twig, $app) {
     $twig->addFilter(new Twig_SimpleFilter('markdown', function ($text) {
         $parsedown = new Parsedown();
         return $parsedown->text($text);
     }, ['is_safe' => ['html']]));
+
     return $twig;
-}));
+});
 
 $app->before(function (Request $request) use ($app) {
     $app['twig']->addGlobal('current_path', $request->getPathInfo());
@@ -55,17 +58,17 @@ $app->before(function (Request $request) use ($app) {
 
 // -- Components ---------------------------------------------------------------
 
-$app['controller'] = $app->share(function() use ($app) {
+$app['controller'] = function() use ($app) {
     return new Controller();
-});
+};
 
-$app['validator'] = $app->share(function() use ($app) {
+$app['validator'] = function() use ($app) {
     return new Validator();
-});
+};
 
-$app['worker'] = $app->share(function() use ($app) {
+$app['worker'] = function() use ($app) {
     return new Worker();
-});
+};
 
 $app['pdf417'] = function() use ($app) {
     return new BigFish\PDF417\PDF417();

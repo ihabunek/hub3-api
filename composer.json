@@ -4,16 +4,14 @@
     "require": {
         "php": ">=5.5",
         "ext-bcmath": "*",
-        "bigfish/pdf417": "~0.1.2",
+
+        "bigfish/pdf417": "^0.2.0",
         "erusev/parsedown": "^1.6.0",
         "justinrainbow/json-schema": "^3.0.0",
-        "sentry/sentry": "^1.4",
-        "silex/silex": "~1.2",
-        "symfony/twig-bridge": "~2.5",
-        "twig/twig": "~1.0"
-    },
-    "require-dev": {
-        "heroku/heroku-buildpack-php": "*"
+        "sentry/sentry": "^1.4.0",
+        "silex/silex": "^2.0.0",
+        "symfony/twig-bridge": "^2.8.0",
+        "twig/twig": "^1.16.0"
     },
     "autoload": {
         "psr-4": {
