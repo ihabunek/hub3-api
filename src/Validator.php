@@ -28,14 +28,10 @@ class Validator
 
         $schemaPath = $schemaDir . self::REQUEST_SCHEMA;
 
-        $retriever = new UriRetriever();
-        $schema = $retriever->retrieve("file://" . $schemaPath);
-
-        $refResolver = new RefResolver($retriever);
-        $refResolver->resolve($schema, 'file://' . $schemaDir);
-
-        $validator = new SchemaValidator();
-        $validator->check($data, $schema);
+        $validator = new \JsonSchema\Validator();
+        $validator->check($data, (object)[
+            '$ref' => 'file://' . $schemaPath
+        ]);
 
         $errors = [];
         if (!$validator->isValid()) {

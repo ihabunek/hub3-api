@@ -6,7 +6,7 @@
         "ext-bcmath": "*",
         "bigfish/pdf417": "~0.1.2",
         "erusev/parsedown": "~1.1.0",
-        "justinrainbow/json-schema": "~1.3",
+        "justinrainbow/json-schema": "^3.0.0",
         "silex/silex": "~1.2",
         "symfony/twig-bridge": "~2.5",
         "twig/twig": "~1.0"
