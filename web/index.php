@@ -17,6 +17,19 @@ if (getenv('HUB3_DEBUG')) {
     $app['debug'] = true;
 }
 
+// -- Error handling -----------------------------------------------------------
+
+$ravenUrl = getenv('HUB3_RAVEN_URL');
+if (!empty($ravenUrl)) {
+    $app['raven'] = $app->share(function () use ($ravenUrl) {
+        $client = new Raven_Client($ravenUrl, [
+            'curl_method' => 'async'
+        ]);
+
+        return $client->install();
+    });
+}
+
 // -- Providers ----------------------------------------------------------------
 
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());

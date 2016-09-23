@@ -145,32 +145,12 @@ class Controller
             $errors = null;
         }
 
-        // Report to new relic (only in production)
-        if (!$app['debug'] && extension_loaded('newrelic')) {
-            newrelic_notice_error("Unhandled exception: " . $ex->getMessage(), $ex);
+        // Report to Sentry
+        if (isset($app['raven'])) {
+            $app['raven']->captureException($ex);
         }
 
-        $this->dumpError($request, $ex);
-
         return $this->error(500, $message, $errors);
-    }
-
-    /**
-     * Saves error data to disk for debugging.
-     */
-    private function dumpError(Request $request, Exception $ex)
-    {
-        $query = $request->query->all();
-        $query = json_encode($query, JSON_PRETTY_PRINT);
-
-        $body = $request->getContent();
-
-        $time = date('c');
-
-        $path = __DIR__ . '/../var/dump-' . uniqid();
-        $dump = "Time: $time\n\nQuery:\n$query\n\nBody:\n$body\n\nException: $ex\n";
-
-        @file_put_contents($path, $dump);
     }
 
     /**

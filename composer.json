@@ -7,6 +7,7 @@
         "bigfish/pdf417": "~0.1.2",
         "erusev/parsedown": "^1.6.0",
         "justinrainbow/json-schema": "^3.0.0",
+        "sentry/sentry": "^1.4",
         "silex/silex": "~1.2",
         "symfony/twig-bridge": "~2.5",
         "twig/twig": "~1.0"
