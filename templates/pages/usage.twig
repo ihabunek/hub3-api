@@ -47,6 +47,7 @@ The request data in JSON would look like this:
 This is the data that will be encoded into the HUB-3 barcode. The data format
 is defined by the
 [HUB-3 standard](http://www.hub.hr/sites/default/files/2dbc_0.pdf).
+Note that "special characters" like č, ć, ž, š and đ are counted as 2.
 
 | Key                  | Type           | Description                         |
 | -------------------- | -------------- | ----------------------------------- |
@@ -59,7 +60,7 @@ is defined by the
 | > sender.place       | text (27)      | Address (post code and place name)  |
 | **receiver**         | **object**     | **Receiver data**                   |
 | > receiver.name      | text (30)      | Name and surname, or company name   |
-| > receiver.street    | text (30)      | Address (street and number)         |
+| > receiver.street    | text (27)      | Address (street and number)         |
 | > receiver.place     | text (27)      | Address (post code and place name)  |
 | > receiver.iban      | text (21)      | Account number (IBAN)               |
 | > receiver.model     | text (2)       | Payment reference model             |
@@ -102,7 +103,7 @@ A note about receiver _model_ and _reference_:
   of the reference string.
 
 For more details, check out the Croatian Financial Agency's
-[specification](http://www.fina.hr/fgs.axd?id=14625) (PDF, Croatian).
+[specification](http://www.hub.hr/sites/default/files/2dbc_0.pdf) (PDF, Croatian).
 
 The data is validated by a JSON schema which is available
 [here](/schema/hub3.json).
